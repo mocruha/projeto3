@@ -2,15 +2,21 @@ POSTGRES_CONTAINER=postgres
 POSTGRES_USER=postgres
 
 up:
-    docker compose up -d
+	docker compose up -d
 
 down:
-    docker compose down
+	docker compose down
 
 db:
-    docker compose exec -T $(POSTGRES_CONTAINER) psql -U $(POSTGRES_USER) -c "create database cpu_data;"
-    @sleep 5
+	docker compose exec -T $(POSTGRES_CONTAINER) psql -U $(POSTGRES_USER) -c "create database polyoma_is_crazy_mad;"
 
 config:
-    curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" \
-        http://localhost:8083/connectors/ -d @dbz-config.json
+	curl -X POST http://localhost:8083/connectors \
+  	-H "Content-Type: application/json" \
+	-d @dbz_config.json
+
+topic:
+	docker exec -it kafka kafka-topics.sh --list --bootstrap-server localhost:9092
+
+cons:
+	python3 consumer.py

@@ -26,7 +26,17 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
   
-
+  minio:
+    image: bitnami/minio:latest
+    container_name: minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=alcantara
+      - MINIO_ROOT_PASSWORD=senhasegura
+      - MINIO_DEFAULT_BUCKETS=baldinho
+  
   debezium:
     image: quay.io/debezium/connect
     container_name: dbz
@@ -43,4 +53,4 @@ services:
     depends_on:
       - postgres
       - kafka
-
+      - minio
